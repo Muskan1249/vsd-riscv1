@@ -6,7 +6,7 @@ In this task we refer the c based  and RISCV based lab and execute it in oracel 
   
 ## C language based LAB
 In this task we followed the following steps to compile our ".c" code in our machine
-1. Open ther virtual box, run the machine you are working onthen  ,then open the terminal ;then we a command cd 
+1. Open ther virtual box, run the machine you are working on  ,then open the terminal ;then we a command cd 
  **cd=is used in the terminal to navigate to the directory where your C source files are before compiling or running them.**
    
 2. Then we opened a leafpad to write our code 
