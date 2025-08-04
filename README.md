@@ -79,3 +79,131 @@ In this task we followed the following steps to compile our ".c" code in our mac
      ***riscv64-unknown-elf-objdump =	This is the RISC-V version of GNU objdump, part of the cross-compilation toolchain. It works with binaries compiled for RISC-V 64-bit (bare-metal) targets (no OS).***
      
      ***-d = Tells objdump to disassemble the .text section (the code section) of the object file. This shows the machine instructions in assembly language.***
+
+
+ <details>
+<summary><b>Task 3:</b> 
+<br>to Review the RISC-V software documentation to understand the R, I, S, B, U, and J instruction types. </summary>
+   
+## What is RISC-V
+RISC-V (Reduced Instruction Set Computer - V) is an open standard instruction set architecture (ISA) based on established reduced instruction set computing principles. Unlike proprietary ISAs, RISC-V is free and open, enabling unrestricted academic and commercial use without licensing fees. This has made RISC-V an attractive option for research, education, and industry applications, fostering innovation and development across various domains.
+### BASICS
+ # Instructions types 
+ | Format     | Used By                      | Fields                                                    |
+| ---------- | ---------------------------- | --------------------------------------------------------- |
+| **R-type** | Register-register arithmetic | `opcode`, `rd`, `funct3`, `rs1`, `rs2`, `funct7`          |
+| **I-type** | Immediate, load, some jumps  | `opcode`, `rd`, `funct3`, `rs1`, `imm[11:0]`              |
+| **S-type** | Store instructions           | `opcode`, `imm[11:5]`, `rs2`, `rs1`, `funct3`, `imm[4:0]` |
+| **B-type** | Conditional branches         | `opcode`, `imm`, `rs2`, `rs1`, `funct3`                   |
+| **U-type** | Upper immediate              | `opcode`, `rd`, `imm[31:12]`                              |
+| **J-type** | Jump instructions            | `opcode`, `rd`, `imm[20:1]`                               |
+
+# 1. R-Type Instructions
+**Format:**
+
+   '| funct7 | rs2 | rs1 | funct3 | rd | opcode |'
+'   |  7b    | 5b  | 5b  |  3b    | 5b |   7b   |
+**Used For:**
+Arithmetic and logical operations between two registers.
+
+**Examples:**
+ADD x5, x1, x2 → x5 = x1 + x2
+
+SUB x6, x1, x2 → x6 = x1 - x2
+
+AND x7, x1, x2 → x7 = x1 & x2
+
+** Key Fields:**
+rs1, rs2: Source registers
+
+rd: Destination register
+
+funct3/funct7: Operation modifiers
+
+opcode: Tells processor this is an R-type instruction
+
+# 2. I-Type Instructions
+**Format:**
+
+    | imm[11:0] | rs1 | funct3 | rd | opcode |
+    |   12b     | 5b  |   3b   | 5b |  7b    |
+**Used For:**
+Arithmetic/logical operations with immediate values
+
+Load instructions
+
+Jump register (JALR)
+
+CSR (control and status register) access
+
+**Examples:**
+ADDI x5, x1, 10 → x5 = x1 + 10
+
+LW x6, 0(x1) → Load 32-bit word from memory at x1 + 0 into x6
+
+JALR x1, x2, 4 → Jump to address x2 + 4 and save return address in x1
+
+# 3. S-Type Instructions
+**Format:**
+
+     | imm[11:5] | rs2 | rs1 | funct3 | imm[4:0] | opcode |
+     |   7b      | 5b  | 5b  |   3b   |   5b     |  7b    |
+**Used For:**
+Store operations from register to memory
+** Examples:**
+SW x6, 0(x1) → Store word from x6 into memory at x1 + 0
+
+SB x6, 4(x1) → Store byte from x6 into memory at x1 + 4
+
+**Note:**
+imm is split across the instruction and recombined in hardware
+
+# 4. B-Type Instructions
+**Format:**
+
+    | imm[12|10:5] | rs2 | rs1 | funct3 | imm[4:1|11] | opcode |
+    |     7b       | 5b  | 5b  |   3b   |     5b      |  7b    |
+**Used For:**
+Conditional branching based on comparison between two registers
+
+**Examples:**
+BEQ x1, x2, offset → Branch if x1 == x2
+
+BNE x3, x4, offset → Branch if x3 ≠ x4
+
+BLT, BGE, BLTU, BGEU for signed/unsigned comparisons
+
+# 5. U-Type Instructions
+**Format:**
+
+    | imm[31:12] | rd | opcode |
+    |    20b     | 5b |   7b   |
+**Used For:**
+Loading large constants or constructing addresses
+
+**Examples:**
+LUI x5, 0x12345 → Load upper 20 bits with 0x12345, lower 12 = 0 → x5 = 0x12345000
+
+AUIPC x6, 0x1 → Add upper immediate to PC: x6 = PC + 0x1000
+
+ # 6. J-Type Instructions
+**Format:**
+
+    | imm[20|10:1|11|19:12] | rd | opcode |
+    |         20b          | 5b |   7b   |
+**Used For:**
+Unconditional jumps with link (save return address in rd)
+**Examples:**
+JAL x1, offset → Jump to PC + offset, save PC + 4 in x1
+
+# 7. System Instructions (I-type style)
+**Used For:**
+Environment control, traps, and system-level access
+
+**Examples:**
+ECALL → Environment call (e.g., system call)
+EBREAK → Breakpoint
+CSR Instructions:
+CSRRW, CSRRS, CSRRC, etc. for reading/writing system registers
+
+  
