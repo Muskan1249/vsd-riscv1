@@ -206,4 +206,66 @@ EBREAK → Breakpoint
 CSR Instructions:
 CSRRW, CSRRS, CSRRC, etc. for reading/writing system registers
 
-  
+ ## 15 instruction 
+ **1.addw a1,a1,a5:**
+  Type: R-Type
+  Binary: 0000000 01101 01011 000    01011 0111011
+  Hex: 00f585bb
+  **2.addi sp,sp,-32:**
+  Type: I-Type
+  Binary: 11111111111000000000 00010 000 00010 0010011
+        Hex: fe010113
+ **3.lw a1,8(sp):**
+  Type: I-Type
+  Binary: 0000000000001000 00010   010 01011 0000011
+        Hex: 00812583
+ **4. sd ra,24(sp):**
+        Type: S-Type
+        Binary: 0000000 00001 00010 011 11000 0100011
+        Hex: 00113c23
+    lui a0,0x2b:
+        Type: U-Type
+        Binary: 000000000000000000101011 01010 0110111
+        Hex: 0002b537
+    jal ra,10448:
+        Type: J-Type (UJ-Type in some documents, similar but specifically for jal)
+        The jal instruction uses a complex imm calculation.
+        Hex: 384000ef
+    addi a0,a0,-960:
+        Type: I-Type
+        Binary: 11111001010000000000 01010 000 01010 0010011
+        Hex: c4050513
+    addi a1,sp,8:
+        Type: I-Type
+        Binary: 0000000000001000 00010 000 01011 0010011
+        Hex: 00810593
+    lw a5,12(sp):
+        Type: I-Type
+        Binary: 0000000000001100 00010 010 01101 0000011
+        Hex: 00c12783
+    addi sp,sp,32:
+        Type: I-Type
+        Binary: 0000000000100000 00010 000 00010 0010011
+        Hex: 02010113
+    li a0,0:
+        Type: I-Type ( pseudo-instruction, translates to addi a0,zero,0 )
+        Binary: 0000000000000000 00000 000 01010 0010011
+        Hex: 00000513
+    ret:
+        Type: I-Type ( pseudo-instruction, translates to jalr zero,0(ra) )
+        Binary (for jalr zero,0(ra)): 000000000000 00001 000 00000 1100111
+        Hex: 00008067
+    auipc a5,0xffff0:
+        Type: U-Type
+        Binary: 11111111111111111111 01101 0110111
+        However auipc is 1111111111111111111100000 01101 0110111 for the immediate
+        Hex: ffff0797
+    beqz a5,10134:
+        Type: B-Type ( pseudo-instruction, translates to beq a5,zero,offset )
+        Binary (Actual beq instruction): 0000000 00000 01101 000 00000 1100011
+        The offset calculation for beqz would determine the exact binary.
+        Hex: 00078863
+    j 101f0:
+        Type: J-Type (UJ-Type in some documents, similar but specifically for jal, however j uses the same opcode as jal with rd set to zero)
+        The j instruction uses a complex imm calculation.
+        Hex: 0c00006f
